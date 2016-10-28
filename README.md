@@ -16,7 +16,7 @@ Slick.php is a really quick way of adding Cloudflare style page rules to your PH
 
 ## Upload slick.php to the server and then add this to the top of your index.php
 
-```
+```php
 <?php
   include 'slick.php';
 ?>
@@ -33,19 +33,17 @@ Slick.php is a really quick way of adding Cloudflare style page rules to your PH
 
 Default setup:
 
-```
+```php
   $slick_config = array(
     'enabled' => TRUE,
 		'cachedir' => '../cache/', 
 		'rules' => []
 	);
-
 ```
 
 All options:
 
-```
-  
+```php
   $slick_config = array(
     'enabled' => TRUE, // TRUE: Caching is on || FALSE: Bypass slick so no caches are checkes or stored
 		'cachedir' => '../cache/', // Where to store cache files
@@ -53,15 +51,13 @@ All options:
 		'flush' => FALSE, // (Optional) FALSE: Ignore || TRUE: Update the cache file for each requested page
 		'controller' => FALSE, // (Optional) FALSE: Do not include any files after slick || 'app.php' : Include the file 'app.php' after slick (useful if using slick.php as the point of entry to your application, rather than including slick from your index file)
 	);
-
 ```
 
 # Rules
 
 Rules are patterns that match agains the URL being requested. This allows you to control cache settings or diferent URL patterns. The rules are matched against the URI (e.g. /news/). They are regular expressions, so be sure to put in a valid regex pattern, and escape special characters needed by regex.
 
-```
-
+```php
  $sectionPattern = '/section.*';
  
  /* 
@@ -94,7 +90,6 @@ Rules are patterns that match agains the URL being requested. This allows you to
   http://website.com/profile/
   htp://website.com/profile
  */
-
 ```
 
 For more info on regex, check out http://php.net/manual/en/regex.examples.php
@@ -104,8 +99,7 @@ Expiry time is set in seconds. Each rule can set the following options:
 
 ## Rule options
 
-```
-  
+``` 
   'cache' // Whether requests matching this rule should be cached at all. Default: 1. Can be 1 or 0 or TRUE or FALSE
   'expires' // How long to cache these requests for. In seconds. Default: 86400 (1 day) Setting to 0 is equivalent to not caching at all
   'post' // Whether to cache this request is $_POST data is present. Default: 0 (Don't cache if there's $_POST). Can be 1 or 0 or TRUE or FALSE
@@ -116,8 +110,7 @@ Expiry time is set in seconds. Each rule can set the following options:
 
 Cache all pages for a day
 
-```
-
+```php
 $slick_config = array(
 		
 		'enabled' => TRUE, // Bypass slick so no caches are checkes or stored
@@ -131,13 +124,11 @@ $slick_config = array(
 		],
 		
 	);
-
 ```
 
 Dont cache /admin requests or /cpresources requests, but cache everything else for 1 day
 
-```
-
+```php
 $slick_config = array(
 		
 		'enabled' => TRUE, // Bypass slick so no caches are checkes or stored
@@ -156,13 +147,11 @@ $slick_config = array(
 		],
 		
 	);
-
 ```
 
 Cache the news page for 50 seconds and everything else for 1 day
 
-```
-
+```php
 $slick_config = array(
 		
 		'enabled' => TRUE, // Bypass slick so no caches are checkes or stored
@@ -181,6 +170,5 @@ $slick_config = array(
 		],
 		
 	);
-
 ```
 

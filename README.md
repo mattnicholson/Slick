@@ -9,7 +9,7 @@ Slick.php is a really quick way of adding Cloudflare style page rules to your PH
 1. Download `slick.php`
 2. Create a cache folder on your server with `755` permissions
 3. Configure `$slick_config` options to set the correct path to your cache folder
-4. Set up your page rules in `$slick_config.php` (These are regular expression patterns that will be matched against the URI, a bit like Cloudflare)
+4. Set up your page rules in `$slick_config` variable (These are regular expression patterns that will be matched against the URI, a bit like Cloudflare)
 5. Upload `slick.php` to your web root
 6. Edit your application entry point (e.g. `index.php`) and add `include 'slick.php'` at the top of the file, inside the opening `<?php` tag
 7. Enjoy

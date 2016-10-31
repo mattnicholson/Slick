@@ -46,6 +46,8 @@ $slick_config = array(
  *
 */
 	
+$uri = $_SERVER['REQUEST_URI'];
+
 /*
 
 Check if a flush flag has been set in the URI
@@ -69,12 +71,13 @@ else:
 	$flush= 0;
 endif;
 
-
+$uri = trim($uri);
 
 $rules = (isset($slick_config['rules']) && is_array($slick_config['rules'])) ? $slick_config['rules'] : array();
 
-foreach($rules as $pattern => $rule):
 
+foreach($rules as $pattern => $rule):
+	
 	if(preg_match('`'.$pattern.'`', $uri)):
 
 		$cache = (array_key_exists('cache',$rule) && (!$rule['cache'])) ? 0 : 1; // Default to cache
@@ -82,20 +85,23 @@ foreach($rules as $pattern => $rule):
 		$post = (array_key_exists('post',$rule) && ($rule['post'])) ? 1 : 0;  // Default to ignore if there's $_POST
 
 		if(!$post && !empty($_POST)) $cache = 0;
-
+		
 		break;
 
 	endif;
 
 endforeach;
 
-
 // Cache file is there, not flushing
-if($slick_config['enabled'] && !$flush && $cache && file_exists($cachefile) && (time() < (filemtime($cachefile)+ $expires))):
+if($slick_config['enabled'] && !$flush && $cache && file_exists($cachefile) && (($expires < 0) || time() < (filemtime($cachefile)+ $expires))):
 	
 	header("X-SLICK-STATUS: HIT");
+	if($expires > 0):
 	$expires = filemtime($cachefile) + $expires;
 	header("X-SLICK-EXPIRES: ".date('Y-m-d H:i:s',$expires));
+	else:
+	header("X-SLICK-EXPIRES: Never");
+	endif;
 	$html = file_get_contents($cachefile);
 
 	echo $html;

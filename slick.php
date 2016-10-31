@@ -46,16 +46,30 @@ $slick_config = array(
  *
 */
 	
-$uri = $_SERVER['REQUEST_URI'];
+/*
+
+Check if a flush flag has been set in the URI
+	
+*/
+
+$get_flush = (isset($_GET['SLICK_FLUSH']) && $_GET['SLICK_FLUSH'] == '1');
+if($get_flush){
+	
+	$uri = preg_replace("|(\?)?SLICK_FLUSH=1&?|","$1",$uri);
+	$uri = preg_replace("|\?$|","",$uri); // If there's just a query string left, get rid of it
+}
+
 $md5 = md5($uri);
 
 $cachefile = $slick_config['cachedir'].$md5.'.html';
 
-if(isset($_SERVER['HTTP_X_SLICK_FLUSH']) || (isset($slick_config['flush']) && $slick_config['flush'])):
+if(isset($_SERVER['HTTP_X_SLICK']) || isset($_SERVER['HTTP_X_SLICK_FLUSH']) || (isset($slick_config['flush']) && $slick_config['flush']) || $get_flush):
 	$flush = 1;
 else:
 	$flush= 0;
 endif;
+
+
 
 $rules = (isset($slick_config['rules']) && is_array($slick_config['rules'])) ? $slick_config['rules'] : array();
 
@@ -78,6 +92,7 @@ endforeach;
 
 // Cache file is there, not flushing
 if($slick_config['enabled'] && !$flush && $cache && file_exists($cachefile) && (time() < (filemtime($cachefile)+ $expires))):
+	
 	header("X-SLICK-STATUS: HIT");
 	$expires = filemtime($cachefile) + $expires;
 	header("X-SLICK-EXPIRES: ".date('Y-m-d H:i:s',$expires));
@@ -88,7 +103,9 @@ if($slick_config['enabled'] && !$flush && $cache && file_exists($cachefile) && (
 	// Stop execution
 	exit;
 else:
-
+	
+	
+	
 	if(isset($_SERVER['HTTP_X_SLICK'])):
 		$slick = 1;
 	else:
@@ -99,7 +116,7 @@ else:
 	// Re-request the page with SLICK header
 	if(!$slick && $slick_config['enabled'] && $cache):
 
-
+	
 
 		$host =   $_SERVER['HTTP_HOST'];
 		$url = 'http://'.$host.$uri;

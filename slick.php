@@ -30,7 +30,7 @@ $slick_config = array(
 			'cache' => 0 // Don't cache admin or cpresources requests
 
 		],
-		'/' => [
+		'^/$' => [
 
 			'expires' => -1 // Never expire the homepage, has to be flushed to clear
 
